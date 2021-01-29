@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace Presentation.Input
 {
-    public class Slider : MonoBehaviour
+    public class Slider : TimeCrank
     {
         public System.Action<float> BeginChangedEvent;
         public System.Action<float> ChangedEvent;
@@ -156,6 +156,25 @@ namespace Presentation.Input
         {
             Ray xAxis = new Ray(transform.position, transform.forward);
             return xAxis.origin + xAxis.direction * Vector3.Dot(xAxis.direction, point - xAxis.origin);
+        }
+
+        override public void RegisterEvent(ITimeChild tc)
+        {
+            BeginChangedEvent += tc.OnBeginTimeChanged;
+            ChangedEvent += tc.OnTimeChanged;
+            EndChangedEvent += tc.OnEndTimeChanged;
+        }
+
+        override public void UnRegisterEvent(ITimeChild tc)
+        {
+            BeginChangedEvent -= tc.OnBeginTimeChanged;
+            ChangedEvent -= tc.OnTimeChanged;
+            EndChangedEvent -= tc.OnEndTimeChanged;
+        }
+
+        override public void OnTimeChildChanged(float percentage)
+        {
+            SetValueWithoutTriggerEvent(percentage);
         }
     }
 }
