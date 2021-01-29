@@ -14,7 +14,7 @@ public interface ITimeChildEventReceiver
 
 public interface ITimeEvaluator
 {
-    void Evaluate(float time);
+    void Evaluate(float percentage);
 }
 
 public interface ITimeCrank

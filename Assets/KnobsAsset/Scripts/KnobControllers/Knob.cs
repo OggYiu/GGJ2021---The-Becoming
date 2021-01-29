@@ -7,8 +7,11 @@ namespace KnobsAsset
     /// <summary>
     /// Abstract base class that provides functionality for a knob that has a handle, listeners and taper curve
     /// </summary>
-    public abstract class Knob : MonoBehaviour
+    public abstract class Knob : TimeCrank
     {
+        public System.Action<float> BeginChangedEvent;
+        public System.Action<float> EndChangedEvent;
+
         //[System.Serializable]
         //public class FloatEvent : UnityEvent<float> { }
 
@@ -67,6 +70,17 @@ namespace KnobsAsset
             OnValueChanged(percentValue);
         }
 
+        public void SetValueWithoutFireEvent(float percentValue)
+        {
+            if (percentValue < 0f || percentValue > 1f)
+            {
+                Debug.LogException(new System.ArgumentOutOfRangeException("percentValue", percentValue, "Setting knob value requires value from [0 - 1]"), this);
+                return;
+            }
+            SetKnobPosition(percentValue);
+            OnValueChanged(percentValue, false);
+        }
+
         protected abstract void SetKnobPosition(float percentValue);
 
         public void OnMouseDown()
@@ -86,6 +100,8 @@ namespace KnobsAsset
         {
             grabbed = true;
             handle.localScale = baseScale * HandleGrabbedScaleMultiplier;
+
+            BeginChangedEvent?.Invoke(0);
         }
 
         /// <summary>
@@ -95,13 +111,15 @@ namespace KnobsAsset
         {
             handle.localScale = baseScale;
             grabbed = false;
+
+            EndChangedEvent?.Invoke(0);
         }
 
         /// <summary>
         /// A method to call when the knob has changed value, for example when concrete descendant classes are being interacted with by the user.
         /// </summary>
         /// <param name="knobPercentage"></param>
-        protected void OnValueChanged(float knobPercentage)
+        protected void OnValueChanged(float knobPercentage, bool sendEvent = true)
         {
             // Check that the knob is set to a valid percentage
             if (knobPercentage < 0f || knobPercentage > 1f)
@@ -117,14 +135,17 @@ namespace KnobsAsset
                 knobValue = TaperCurve.Evaluate(knobValue);
             }
 
-            // Pass the new knob value to any attached KnobListeners so they can handle the change
-            foreach (KnobListener knobListener in knobListeners)
+            if(sendEvent)
             {
-                knobListener.OnKnobValueChange(knobValue);
-            }
+                // Pass the new knob value to any attached KnobListeners so they can handle the change
+                foreach (KnobListener knobListener in knobListeners)
+                {
+                    knobListener.OnKnobValueChange(knobValue);
+                }
 
-            // Pass the new knob value to any assigned action so they can handle the change
-            OnChangeEvent?.Invoke(knobValue);
+                // Pass the new knob value to any assigned action so they can handle the change
+                OnChangeEvent?.Invoke(knobValue);
+            }
         }
 
         protected Vector3 MousePositionOnRelativePlane()
@@ -137,6 +158,25 @@ namespace KnobsAsset
                 return targetPoint;
             }
             return Vector3.zero;
+        }
+
+        override public void RegisterEvent(ITimeChild tc)
+        {
+            BeginChangedEvent += tc.OnBeginTimeChanged;
+            OnChangeEvent += tc.OnTimeChanged;
+            EndChangedEvent += tc.OnEndTimeChanged;
+        }
+
+        override public void UnRegisterEvent(ITimeChild tc)
+        {
+            BeginChangedEvent -= tc.OnBeginTimeChanged;
+            OnChangeEvent -= tc.OnTimeChanged;
+            EndChangedEvent -= tc.OnEndTimeChanged;
+        }
+
+        override public void OnTimeChildChanged(float percentage)
+        {
+            SetValueWithoutFireEvent(percentage);
         }
     }
 }

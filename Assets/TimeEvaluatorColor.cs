@@ -8,8 +8,8 @@ public class TimeEvaluatorColor : MonoBehaviour, ITimeEvaluator
     [SerializeField] private Color minColor;
     [SerializeField] private Color maxColor;
 
-    public void Evaluate(float time)
+    public void Evaluate(float percentage)
     {
-        GetComponent<MeshRenderer>().material.color = Color.Lerp(minColor, maxColor, time);
+        GetComponent<MeshRenderer>().material.color = Color.Lerp(minColor, maxColor, percentage);
     }
 }

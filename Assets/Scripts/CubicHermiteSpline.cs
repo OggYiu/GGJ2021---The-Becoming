@@ -111,13 +111,13 @@ public class CubicHermiteSpline : MonoBehaviour
         //    }
         //}
 
-        if(this.points.Count > 0)
-        {
-            // draw distance
-            var pos = GetPosWithDistance(this.points.ToArray(), gizmos_distance, resolution);
-            Gizmos.color = Color.green;
-            Gizmos.DrawSphere(pos, 0.2f);
-        }
+        //if(this.points.Count > 0)
+        //{
+        //    // draw distance
+        //    var pos = GetPosWithDistance(this.points.ToArray(), gizmos_distance, resolution);
+        //    Gizmos.color = Color.green;
+        //    Gizmos.DrawSphere(pos, 0.2f);
+        //}
     }
 
     public static void DrawGizmosUV(Transform p1, Transform p2)
@@ -159,7 +159,7 @@ public class CubicHermiteSpline : MonoBehaviour
             }
         }
 
-        return path[0].transform.position;
+        return path[path.Length - 1].transform.position;
     }
 
     public static float GetTotalDistance(Transform[] path, int resolution)
