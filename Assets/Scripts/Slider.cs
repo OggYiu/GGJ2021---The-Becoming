@@ -176,5 +176,10 @@ namespace Presentation.Input
         {
             SetValueWithoutTriggerEvent(percentage);
         }
+
+        override public void SetPercentage(float percentage)
+        {
+            SetValueWithoutTriggerEvent(percentage);
+        }
     }
 }
