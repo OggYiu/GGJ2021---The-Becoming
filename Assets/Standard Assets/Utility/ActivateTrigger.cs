@@ -23,6 +23,7 @@ namespace UnityStandardAssets.Utility
         public GameObject source;
         public int triggerCount = 1;
         public bool repeatTrigger = false;
+        public string targetTag = "";
 
 
         private void DoActivateTrigger()
@@ -89,7 +90,10 @@ namespace UnityStandardAssets.Utility
 
         private void OnTriggerEnter(Collider other)
         {
-            DoActivateTrigger();
+            if(string.Compare(other.tag, targetTag) == 0)
+            {
+                DoActivateTrigger();
+            }
         }
     }
 }

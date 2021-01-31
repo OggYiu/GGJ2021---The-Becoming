@@ -19,18 +19,27 @@ public class Fish : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         IGameTrigger gameTrigger = other.GetComponent<IGameTrigger>();
-        gameTrigger.OnGameTriggerEnter(this.gameObject);
+        if (gameTrigger != null)
+        {
+            gameTrigger.OnGameTriggerEnter(this.gameObject);
+        }
     }
 
     private void OnTriggerStay(Collider other)
     {
         IGameTrigger gameTrigger = other.GetComponent<IGameTrigger>();
-        gameTrigger.OnGameTriggerStay(this.gameObject);
+        if(gameTrigger != null)
+        {
+            gameTrigger.OnGameTriggerStay(this.gameObject);
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         IGameTrigger gameTrigger = other.GetComponent<IGameTrigger>();
-        gameTrigger.OnGameTriggerExit(this.gameObject);
+        if (gameTrigger != null)
+        {
+            gameTrigger.OnGameTriggerExit(this.gameObject);
+        }
     }
 }

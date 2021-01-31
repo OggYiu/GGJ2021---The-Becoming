@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class GameMgr : MonoBehaviour
 {
     [SerializeField] private ParticleSystem sfxDeath;
+    [SerializeField] private GameObject fishSprite;
 
     public bool IsGameOver() => _gameOver;
 
@@ -19,6 +20,7 @@ public class GameMgr : MonoBehaviour
             sfxDeath.Play();
             Destroy(fish.gameObject.GetComponent<Collider>());
             Destroy(fish.gameObject.GetComponent<MeshRenderer>());
+            Destroy(fishSprite);
         }
 
         StartCoroutine(RestartLevel());

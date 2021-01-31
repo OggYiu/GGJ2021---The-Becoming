@@ -44,7 +44,7 @@ namespace KnobsAsset
             knobListeners = GetComponents<KnobListener>();
             if (knobListeners.Length < 1)
             {
-                Debug.LogWarning(name + " has no attached listeners, and no assigned actions, meaning this knob will have no effect", this);
+                //Debug.LogWarning(name + " has no attached listeners, and no assigned actions, meaning this knob will have no effect", this);
             }
 
             // get the handle of the knob

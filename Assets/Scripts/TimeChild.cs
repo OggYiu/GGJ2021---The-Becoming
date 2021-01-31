@@ -23,6 +23,8 @@ public class TimeChild : MonoBehaviour, ITimeChild
     [SerializeField] private bool showKnobWhenStart = false;
     [SerializeField] private bool clickToShowKnob = true;
     [SerializeField] private bool fadeAfterRelease = true;
+    [SerializeField] private bool modifySpeedAfterDrag = false;
+    [SerializeField] private float afterDragSpeedMultipler = 0.1f;
 
     protected TimeChildMgr timeChildMgr;
 
@@ -201,6 +203,11 @@ public class TimeChild : MonoBehaviour, ITimeChild
         if(fadeAfterRelease)
         {
             StartCoroutine(DeActiveTimeCrank());
+        }
+
+        if(modifySpeedAfterDrag)
+        {
+            speed *= afterDragSpeedMultipler;
         }
     }
 
